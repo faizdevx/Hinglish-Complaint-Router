@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{ title }} · Hinglish Complaint Router</title>
+<script>try{var t=localStorage.getItem('theme');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' rx='3' fill='%232459d6'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="{{ url_for('static', path='css/app.css') }}">
+</head>
+<body data-bands='{{ bands|tojson|forceescape }}' data-threshold="{{ threshold }}" data-default-model="{{ default_model or '' }}">
+<a class="skip" href="#main">Skip to content</a>
+<div class="shell">
+  <header class="topbar">
+    <button class="icon-btn menu-btn" id="menu-btn" aria-label="Toggle navigation" aria-expanded="false" aria-controls="sidebar">Menu</button>
+    <span class="brand">Hinglish Complaint Router</span>
+    <span class="spacer"></span>
+    <span class="small" role="status"><span class="dot {{ 'ok' if sidebar.online else 'bad' }}" aria-hidden="true"></span>System {{ 'Online' if sidebar.online else 'Offline' }}</span>
+    <button class="icon-btn" id="theme-btn" aria-label="Toggle dark / light theme">Theme</button>
+  </header>
+  <aside class="sidebar" id="sidebar" aria-label="Primary">
+    <nav class="nav">
+      {% for key, label, href in [('dashboard','Dashboard','/'),('classify','Classify','/classify'),('playground','Playground','/playground'),('batch','Batch','/batch'),('models','Models','/models'),('evaluation','Evaluation','/evaluation'),('errors','Errors','/errors'),('demo','Demo','/demo'),('health','Health','/health-ui'),('about','About','/about')] %}
+      <a href="{{ href }}" {% if active == key %}aria-current="page"{% endif %}>{{ label }}</a>{% endfor %}
+      <a href="/docs">API Docs →</a>
+    </nav>
+    <div class="side-status">
+      <div><span>System</span><span><span class="dot ok" aria-hidden="true"></span>Online</span></div>
+      <div><span>Models</span><span><span class="dot {{ 'ok' if sidebar.models_loaded == sidebar.models_total else 'warn' if sidebar.models_loaded else 'bad' }}" aria-hidden="true"></span>{{ sidebar.models_loaded }} Loaded</span></div>
+      <div><span>Dataset</span><span><span class="dot {{ 'ok' if sidebar.dataset else 'bad' }}" aria-hidden="true"></span>{{ 'Available' if sidebar.dataset else 'Not available' }}</span></div>
+    </div>
+  </aside>
+  <main class="main" id="main">{% block content %}{% endblock %}</main>
+</div>
+<div id="toasts" role="status" aria-live="polite"></div>
+<script src="{{ url_for('static', path='js/app.js') }}" defer></script>
+</body>
+</html>

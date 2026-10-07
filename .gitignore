@@ -1,0 +1,15 @@
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ipynb_checkpoints/
+.venv/
+venv/
+.env
+*.log
+logs/
+# large artifacts: regenerate with scripts/ (see README)
+models/*
+!models/README.md
+data/raw/*
+!data/raw/.gitkeep
+!data/raw/download_info.json

@@ -1,0 +1,32 @@
+{% extends "base.html" %}{% from "_macros.html" import hint_eval %}
+{% block content %}
+<h1>Error analysis</h1>
+<p class="lede">Confusion matrices and real misclassified test-split examples. Nothing here is generated for display.</p>
+<nav class="chips" aria-label="Model selector" style="margin-bottom:16px">{% for k in model_keys %}<a class="btn {{ '' if k == sel_model else 'secondary' }}" href="/errors?model={{ k }}" {% if k == sel_model %}aria-current="true"{% endif %}>{{ model_display[k] }}</a>{% endfor %}</nav>
+{% if not metrics %}<div class="notice">No evaluation artifacts for {{ model_display[sel_model] }}. {{ hint_eval() }}</div>{% else %}
+<div class="grid cols-2">
+<section class="card" style="grid-column: 1 / -1"><h2>Intent confusion matrix ({{ model_display[sel_model] }}, 77 classes)</h2>
+  {% if figures['confusion_intent_' ~ sel_model ~ '.png'] %}<div class="scroll-img" tabindex="0" role="region" aria-label="Intent confusion matrix, scrollable"><img src="/figures/confusion_intent_{{ sel_model }}.png" alt="Intent confusion matrix for {{ model_display[sel_model] }}: rows are true intents, columns are predicted intents"></div>
+  {% else %}<p class="muted">Not available. {{ hint_eval() }}</p>{% endif %}
+  <h3>Most frequent confusions (true → predicted)</h3>
+  <div class="table-wrap"><table><thead><tr><th>True</th><th>Predicted</th><th class="num">Count</th></tr></thead><tbody>{% for p in metrics.intent_confusion_top_pairs[:10] %}<tr><td class="mono">{{ p.true }}</td><td class="mono">{{ p.pred }}</td><td class="num">{{ p.count }}</td></tr>{% endfor %}</tbody></table></div></section>
+<section class="card"><h2>Urgency confusion matrix</h2>
+  {% set cm = metrics.overall.urgency.confusion_matrix %}{% set labs = ['very_low','low','medium','high','critical'] %}
+  <div class="table-wrap"><table class="cm"><caption class="small muted" style="text-align:left;padding:8px">rows = true, columns = predicted · n={{ metrics.overall.urgency.n }} (synthetic test)</caption><thead><tr><th></th>{% for l in labs %}<th scope="col">{{ l }}</th>{% endfor %}</tr></thead><tbody>
+  {% for row in cm %}{% set i = loop.index0 %}<tr><th scope="row">{{ labs[i] }}</th>{% for v in row %}<td class="{{ 'diag' if i == loop.index0 }}">{{ v }}</td>{% endfor %}</tr>{% endfor %}</tbody></table></div></section>
+<section class="card"><h2>Escalation precision–recall</h2>
+  {% if figures['escalation_pr_curve.png'] %}<img class="fig" src="/figures/escalation_pr_curve.png" alt="Precision-recall curves for escalation detection, both models, with prevalence baseline">{% else %}<p class="muted">Not available. {{ hint_eval() }}</p>{% endif %}</section>
+</div>{% endif %}
+
+<h2 style="margin-top:28px">Failed test examples</h2>
+{% if not errors_available %}<div class="notice">No error analysis has been generated yet. {{ hint_eval() }}</div>{% else %}
+<form id="err-filters" class="card" novalidate><div class="row">
+  <div><label for="q">Search</label><input type="search" id="q" placeholder="text, true or predicted intent"></div>
+  <div><label for="f-model">Model</label><select id="f-model"><option value="">All</option>{% for k in model_keys %}<option value="{{ k }}" {{ 'selected' if k == sel_model }}>{{ model_display[k] }}</option>{% endfor %}</select></div>
+  <div><label for="f-lang">Language</label><select id="f-lang"><option value="">All</option>{% for l in facets.languages %}<option>{{ l }}</option>{% endfor %}</select></div>
+  <div><label for="f-intent">Intent (true or predicted)</label><select id="f-intent"><option value="">All</option>{% for l in facets.intents %}<option>{{ l }}</option>{% endfor %}</select></div></div></form>
+<p class="small muted" id="err-count" role="status" style="margin:10px 0"></p>
+<div class="table-wrap"><table><thead><tr><th>Model</th><th>Input</th><th>Lang</th><th>True intent</th><th>Pred. intent</th><th>True urgency</th><th>Pred. urgency</th><th>Escalation (true / pred, p)</th></tr></thead><tbody id="err-rows"></tbody></table></div>
+<p style="margin-top:10px"><button type="button" class="secondary" id="err-more" hidden>Load more</button></p>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Demo: held-out dataset examples</h1>
+<p class="lede">Live predictions from both trained models on real rows of the <strong>test split</strong> (never used for training or model selection), next to the dataset's labels. Only the labels each source provides are shown.</p>
+{% if not examples %}<div class="notice">Dataset examples are not available in this environment.</div>{% endif %}
+<div class="grid">
+{% for ex in examples %}<article class="card"><span class="badge data">Dataset evaluation example</span> <span class="badge">{{ ex.language }}</span> <span class="badge">{{ ex.provenance }}</span>
+<p class="text" style="margin:10px 0;font-size:1.05rem">{{ ex.text }}</p>
+<div class="table-wrap"><table><thead><tr><th></th><th>Intent</th><th>Urgency</th><th>Escalation</th></tr></thead><tbody>
+<tr><th scope="row">Dataset label</th><td>{{ ex.true_intent or '–' }}</td><td>{{ ['very_low','low','medium','high','critical'][ex.true_urgency] if ex.true_urgency is not none else '–' }}</td><td>{{ ('yes' if ex.true_escalation else 'no') if ex.true_escalation is not none else '–' }}</td></tr>
+{% for k in model_keys %}{% set p = ex.predictions[k] %}<tr><th scope="row">{{ model_display[k] }}</th>{% if p %}<td>{{ p.intent }}</td><td>{{ p.urgency }}</td><td>{{ '%.1f'|format(p.escalation_probability*100) }}% <span class="muted small">· {{ '%.0f'|format(p.inference_ms) }} ms</span></td>{% else %}<td colspan="3" class="muted">Model unavailable</td>{% endif %}</tr>{% endfor %}
+</tbody></table></div></article>{% endfor %}
+</div>
+<p class="small muted">“–” = the source dataset has no label of that kind for this text (intent labels exist only for Banking77 rows; urgency/escalation only for the synthetic rows).</p>
+{% endblock %}

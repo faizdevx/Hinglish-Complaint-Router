@@ -1,0 +1,26 @@
+{% extends "base.html" %}{% block content %}
+<h1>Classify message</h1>
+<p class="lede">Submit one message. The selected model returns an intent, an urgency level and an escalation probability; the route is a deterministic mapping from the predicted intent.</p>
+<div class="notice info small">Trained intents are <strong>banking-support</strong> categories (Banking77). Messages about other domains (e.g. street lights, water supply) are still assigned the closest banking intent, which will be wrong. Urgency/escalation were learned from synthetic Hindi/Hinglish data.</div>
+<form id="classify-form" class="card" novalidate>
+  <label for="text">Message</label>
+  <textarea id="text" name="text" maxlength="5000" placeholder="Enter message… e.g. Mera card block ho gaya hai" required></textarea>
+  <div class="row" style="margin-top:12px">
+    <div><label for="language">Language</label><select id="language" name="language"><option value="auto">Auto detect</option><option value="en-Latn">English (en-Latn)</option><option value="hi-Deva">Hindi (hi-Deva)</option><option value="hi-Latn">Hinglish (hi-Latn)</option></select></div>
+    <div><label for="model">Model</label><select id="model" name="model">
+      {% for k in model_keys %}<option value="{{ k }}" {{ 'selected' if k == default_model }} {{ 'disabled' if models_status[k].status != 'ready' }}>{{ model_display[k] }}{{ ' (unavailable)' if models_status[k].status != 'ready' }}</option>{% endfor %}</select></div>
+    <div class="shrink"><button type="submit" id="analyze-btn" data-label="Analyze message" {{ 'disabled' if not default_model }}>Analyze message</button></div>
+  </div>
+  {% if not default_model %}<p class="notice bad" style="margin-top:12px">Model unavailable. No checkpoints found; run the training pipeline first (<code>python scripts/train_lstm.py</code>, <code>python scripts/train_transformer.py</code>).</p>{% endif %}
+  <p class="small muted" style="margin:8px 0 0">Selecting a language only relabels the output; the model never receives it.</p>
+</form>
+<section id="result" class="card" style="margin-top:16px" hidden aria-live="polite" aria-labelledby="h-res"><h2 id="h-res">Prediction</h2><div id="result-body"></div></section>
+<section class="card" style="margin-top:16px"><h2>Quick tests</h2>
+  {% if dataset_examples %}<div class="group-title">Examples from the held-out test split <span class="badge data">Dataset example</span></div>
+  {% for g in ['English','Hindi (Devanagari)','Hinglish / Romanised Hindi','Other supported languages'] %}{% set items = dataset_examples|selectattr('group','equalto',g)|list %}
+  {% if items %}<div class="group-title">{{ g }}</div><div class="chips">{% for ex in items %}<button type="button" class="chip" data-fill="{{ ex.text }}" title="{{ ex.language }} · true intent: {{ ex.true_intent }}">{{ ex.text }}</button>{% endfor %}</div>{% endif %}{% endfor %}
+  {% else %}<p class="muted small">Dataset examples are not available in this environment (<code>data/processed/test.jsonl</code> missing).</p>{% endif %}
+  <div class="group-title">Hand-written inputs <span class="badge demo">Demo example</span> (not dataset samples)</div>
+  <div class="chips">{% for ex in demo_examples %}<button type="button" class="chip" data-fill="{{ ex.text }}">{{ ex.text }}</button>{% endfor %}</div>
+</section>
+{% endblock %}

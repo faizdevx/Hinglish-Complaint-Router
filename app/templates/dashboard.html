@@ -1,0 +1,34 @@
+{% extends "base.html" %}{% from "_macros.html" import dot, na %}
+{% block content %}
+<h1>Dashboard</h1>
+<p class="lede">Multilingual message router: predicts <strong>intent</strong>, <strong>urgency</strong> and <strong>escalation probability</strong> for a text message, then maps the intent to a destination queue. Two models are trained and compared: a from-scratch BiLSTM and a fine-tuned MuRIL encoder.</p>
+<div class="notice">Data caveat: intent labels come from <strong>Banking77</strong> (banking support queries; non-English text is machine-translated). Urgency and escalation labels come from a <strong>synthetic</strong> (LLM-generated) Hindi/Hinglish set. No labelled real complaints are used. See <a href="/about">About</a>.</div>
+<div class="grid cols-4">
+  <section class="card" aria-labelledby="h-models"><h2 id="h-models">Model status</h2>
+    {% for k in model_keys %}{% set m = models_status[k] %}
+    <p>{{ dot(m.status) }}<strong>{{ model_display[k] }}</strong> <span class="muted">{{ 'Ready' if m.status == 'ready' else 'Unavailable' }}</span></p>
+    {% if m.status != 'ready' %}<p class="small muted">{{ m.message }}</p>{% else %}<p class="small muted">{{ '{:,}'.format(m.parameters) }} params · {{ m.device }}</p>{% endif %}{% endfor %}
+    <a href="/models">Compare models →</a></section>
+  <section class="card" aria-labelledby="h-data"><h2 id="h-data">Dataset</h2>
+    {% if dataset %}<dl class="kv"><dt>Source</dt><dd>IndicJevBench</dd><dt>Subsets used</dt><dd>2</dd><dt>Examples</dt><dd>{{ '{:,}'.format(dataset.examples) }}</dd>
+      <dt>Languages</dt><dd>{{ dataset.languages|length }}</dd><dt>Intent classes</dt><dd>{{ dataset.n_intents }}</dd><dt>Urgency levels</dt><dd>{{ dataset.n_urgency }}</dd></dl>
+      <p class="small muted" style="margin-top:8px">{{ dataset.languages|join(', ') }}</p>
+    {% else %}<p class="muted">Not available. Run <code>python scripts/prepare_dataset.py</code>.</p>{% endif %}</section>
+  <section class="card" aria-labelledby="h-eval"><h2 id="h-eval">Latest evaluation (test)</h2>
+    {% if comparison %}{% for k in model_keys if k in comparison.models %}{% set c = comparison.models[k] %}
+    <p class="small" style="margin-bottom:2px"><strong>{{ model_display[k] }}</strong></p>
+    <dl class="kv"><dt>Intent macro-F1</dt><dd>{{ na(c.intent_macro_f1) }}</dd><dt>Urgency macro-F1</dt><dd>{{ na(c.urgency_macro_f1) }}</dd><dt>Escalation F1</dt><dd>{{ na(c.escalation_f1) }}</dd></dl>{% endfor %}
+    <a href="/evaluation">Full evaluation →</a>
+    {% else %}<p class="muted">Not available. Run <code>python scripts/evaluate.py</code>.</p>{% endif %}</section>
+  <section class="card" aria-labelledby="h-sys"><h2 id="h-sys">System</h2>
+    <dl class="kv"><dt>API</dt><dd>{{ dot('ok') }}{{ health.status }}</dd><dt>Models loaded</dt><dd>{{ health.models_loaded|length }} / {{ health.models_total }}</dd>
+      <dt>Device</dt><dd>{{ health.device }}</dd><dt>Python</dt><dd>{{ system.python }}</dd><dt>PyTorch</dt><dd>{{ system.torch }}</dd><dt>Transformers</dt><dd>{{ system.transformers }}</dd></dl>
+    <a href="/health-ui">Health details →</a></section>
+</div>
+<h2 style="margin-top:28px">What can I do here?</h2>
+<div class="grid cols-3">
+  <a class="card" href="/classify"><strong>Classify a message</strong><p class="muted small">Pick a model, see intent / urgency / escalation / route, latency and a plain-language explanation.</p></a>
+  <a class="card" href="/playground"><strong>Compare both models</strong><p class="muted small">Same input, side by side, with real inference latency.</p></a>
+  <a class="card" href="/errors"><strong>See where it fails</strong><p class="muted small">Confusion matrices and searchable real test-set errors.</p></a>
+</div>
+{% endblock %}

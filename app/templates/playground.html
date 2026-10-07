@@ -1,0 +1,18 @@
+{% extends "base.html" %}{% block content %}
+<h1>Playground</h1>
+<p class="lede">Run the same input through both models and compare outputs and latency. Every value is a live inference result.</p>
+<form id="compare-form" class="card" novalidate>
+  <label for="text">Input</label>
+  <textarea id="text" name="text" maxlength="5000" placeholder="Mera refund abhi tak nahi aaya…" required></textarea>
+  <div class="row" style="margin-top:12px">
+    <div><label for="language">Language</label><select id="language"><option value="auto">Auto detect</option><option value="en-Latn">English (en-Latn)</option><option value="hi-Deva">Hindi (hi-Deva)</option><option value="hi-Latn">Hinglish (hi-Latn)</option></select></div>
+    <div class="shrink"><button type="submit" id="compare-btn" data-label="Compare models">Compare models</button></div>
+  </div>
+</form>
+<div id="compare-out" class="grid cols-2" style="margin-top:16px" aria-live="polite"></div>
+<section class="card" style="margin-top:16px"><h2>Try an input</h2>
+  <div class="group-title">From the held-out test split <span class="badge data">Dataset example</span></div>
+  <div class="chips">{% for ex in dataset_examples %}<button type="button" class="chip" data-fill="{{ ex.text }}" title="{{ ex.language }}">{{ ex.text }}</button>{% endfor %}{% if not dataset_examples %}<span class="muted small">Not available.</span>{% endif %}</div>
+  <div class="group-title">Hand-written <span class="badge demo">Demo example</span></div>
+  <div class="chips">{% for ex in demo_examples %}<button type="button" class="chip" data-fill="{{ ex.text }}">{{ ex.text }}</button>{% endfor %}</div></section>
+{% endblock %}

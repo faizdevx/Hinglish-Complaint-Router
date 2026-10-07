@@ -1,0 +1,18 @@
+{% extends "base.html" %}{% block content %}
+<h1>Batch testing</h1>
+<p class="lede">Upload a CSV with a <code>text</code> column (optional <code>id</code>). Max 1,000 rows / 2 MB. Invalid rows are reported and skipped.</p>
+<form id="batch-form" class="card" novalidate>
+  <div class="row">
+    <div><label for="file">CSV file</label><input type="file" id="file" name="file" accept=".csv,text/csv" required></div>
+    <div><label for="model">Model</label><select id="model" name="model">{% for k in model_keys %}<option value="{{ k }}" {{ 'selected' if k == default_model }} {{ 'disabled' if models_status[k].status != 'ready' }}>{{ model_display[k] }}{{ ' (unavailable)' if models_status[k].status != 'ready' }}</option>{% endfor %}</select></div>
+    <div class="shrink"><button type="submit" id="batch-btn" data-label="Run batch" {{ 'disabled' if not default_model }}>Run batch</button></div>
+  </div>
+</form>
+<section id="batch-result" hidden aria-live="polite" style="margin-top:16px">
+  <div class="grid cols-4" id="batch-summary"></div>
+  <p style="margin:14px 0"><button type="button" id="download-btn" class="secondary">Download results CSV</button></p>
+  <div id="batch-failed"></div>
+  <div class="table-wrap"><table><caption class="small muted" style="text-align:left;padding:8px 12px">Predictions (first 200 rows shown; the CSV contains all)</caption>
+    <thead><tr><th>ID</th><th>Text</th><th>Language</th><th>Intent</th><th>Urgency</th><th class="num">Escalation</th><th>Route</th></tr></thead><tbody id="batch-rows"></tbody></table></div>
+</section>
+{% endblock %}

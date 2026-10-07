@@ -1,0 +1,27 @@
+{
+  "seed": 42,
+  "skipped_malformed": 0,
+  "intent_label_conflicts": 0,
+  "banking_unique_texts": 7816,
+  "synthetic_unique_texts": 222,
+  "splits": {
+    "test": {
+      "rows": 1207,
+      "intent_rows": 1173,
+      "urgency_rows": 27,
+      "escalation_rows": 26
+    },
+    "train": {
+      "rows": 5626,
+      "intent_rows": 5471,
+      "urgency_rows": 124,
+      "escalation_rows": 123
+    },
+    "val": {
+      "rows": 1205,
+      "intent_rows": 1172,
+      "urgency_rows": 24,
+      "escalation_rows": 28
+    }
+  }
+}

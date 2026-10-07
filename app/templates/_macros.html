@@ -1,0 +1,15 @@
+{% macro dot(state) %}<span class="dot {{ 'ok' if state in ('ready','ok','available') else 'bad' if state in ('unavailable','error') else 'warn' }}" aria-hidden="true"></span>{% endmacro %}
+{% macro na(v, fmt='{:.3f}') %}{% if v is none %}<span class="muted">Not available</span>{% else %}{{ fmt.format(v) }}{% endif %}{% endmacro %}
+{% macro hint_eval() %}<span class="muted small">Generate with <code>python scripts/evaluate.py</code>.</span>{% endmacro %}
+{% macro bars(items, cls='') %}
+{# items: list of {label, value, text} ; value in 0..1 scale of bar width percent #}
+<div class="bars">{% for it in items %}
+  <div class="barrow"><span class="lab">{{ it.label }}</span>
+    <div class="track" role="img" aria-label="{{ it.label }}: {{ it.text }}"><div class="fill {{ it.cls or cls }}" style="width: {{ (it.pct or 0)|round(1) }}%"></div></div>
+    <span class="num">{{ it.text }}</span></div>{% endfor %}</div>
+{% endmacro %}
+{% macro meter(p) %}
+{% set band = 'low' if p < bands[0][0] else 'medium' if p < bands[1][0] else 'high' %}
+<div class="meter {{ band }}" role="img" aria-label="Escalation probability {{ (p*100)|round(1) }} percent, band {{ band }}">{% for i in range(10) %}<span class="{{ 'on' if (i+0.5)/10 <= p else '' }}"></span>{% endfor %}</div>
+<span class="band">{{ band|upper }}</span>
+{% endmacro %}
