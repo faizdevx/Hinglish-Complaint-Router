@@ -1,0 +1,54 @@
+{% extends "base.html" %}{% from "_macros.html" import na, hint_eval, bars %}
+{% block content %}
+<h1>Evaluation</h1>
+<p class="lede">All numbers are computed by <code>scripts/evaluate.py</code> on the held-out test split and read from saved JSON. Nothing here is computed in the browser or hard-coded.</p>
+{% if not comparison %}<div class="notice">Evaluation artifacts are not available. {{ hint_eval() }}</div>{% else %}
+<div class="notice">Test-set sizes: intent n={{ model_metrics[model_keys[0]].test_sizes.intent if model_metrics[model_keys[0]] else '?' }} (Banking77, 7 languages) · urgency n={{ model_metrics[model_keys[0]].test_sizes.urgency if model_metrics[model_keys[0]] else '?' }} · escalation n={{ model_metrics[model_keys[0]].test_sizes.escalation if model_metrics[model_keys[0]] else '?' }} (<strong>synthetic</strong>, Hindi/Hinglish). Urgency/escalation metrics on ~30 examples have wide uncertainty; the 95% bootstrap intervals are shown.</div>
+<h2>Overall</h2>
+<div class="grid cols-3">{% for title, items in charts.overall.items() %}<section class="card"><h2>{{ title }}</h2>{{ bars(items) }}</section>{% endfor %}</div>
+
+<h2 style="margin-top:28px">Intent (Banking77)</h2>
+<div class="table-wrap"><table><thead><tr><th>Model</th><th class="num">n</th><th class="num">Accuracy</th><th class="num">Macro P</th><th class="num">Macro R</th><th class="num">Macro F1</th><th class="num">Weighted F1</th><th>Macro-F1 95% CI</th></tr></thead><tbody>
+{% for k in model_keys if model_metrics[k] %}{% set i = model_metrics[k].overall.intent %}<tr><td>{{ model_display[k] }}</td><td class="num">{{ i.n }}</td><td class="num">{{ na(i.accuracy) }}</td><td class="num">{{ na(i.macro_precision) }}</td><td class="num">{{ na(i.macro_recall) }}</td><td class="num">{{ na(i.macro_f1) }}</td><td class="num">{{ na(i.weighted_f1) }}</td><td>{% if i.macro_f1_ci95 %}[{{ '%.3f'|format(i.macro_f1_ci95[0]) }}, {{ '%.3f'|format(i.macro_f1_ci95[1]) }}]{% else %}n/a{% endif %}</td></tr>{% endfor %}
+{% if comparison.majority_baseline %}{% set b = comparison.majority_baseline.intent %}<tr class="muted"><td>Majority class baseline</td><td class="num">{{ b.n }}</td><td class="num">{{ na(b.accuracy) }}</td><td class="num">{{ na(b.macro_precision) }}</td><td class="num">{{ na(b.macro_recall) }}</td><td class="num">{{ na(b.macro_f1) }}</td><td class="num">{{ na(b.weighted_f1) }}</td><td></td></tr>{% endif %}
+</tbody></table></div>
+
+<h2 style="margin-top:28px">Urgency (synthetic, 5 levels)</h2>
+<div class="table-wrap"><table><thead><tr><th>Model</th><th class="num">n</th><th class="num">Accuracy</th><th class="num">Macro F1</th><th class="num">MAE (levels)</th><th class="num">Within ±1</th><th>Macro-F1 95% CI</th></tr></thead><tbody>
+{% for k in model_keys if model_metrics[k] %}{% set u = model_metrics[k].overall.urgency %}<tr><td>{{ model_display[k] }}</td><td class="num">{{ u.n }}</td><td class="num">{{ na(u.accuracy) }}</td><td class="num">{{ na(u.macro_f1) }}</td><td class="num">{{ na(u.mae_levels) }}</td><td class="num">{{ na(u.within_one_accuracy) }}</td><td>{% if u.macro_f1_ci95 %}[{{ '%.3f'|format(u.macro_f1_ci95[0]) }}, {{ '%.3f'|format(u.macro_f1_ci95[1]) }}]{% else %}n/a{% endif %}</td></tr>{% endfor %}
+{% if comparison.majority_baseline %}{% set b = comparison.majority_baseline.urgency %}<tr class="muted"><td>Majority class baseline ({{ b.predicts }})</td><td class="num">{{ b.n }}</td><td class="num">{{ na(b.accuracy) }}</td><td class="num">{{ na(b.macro_f1) }}</td><td class="num">{{ na(b.mae_levels) }}</td><td class="num">{{ na(b.within_one_accuracy) }}</td><td></td></tr>{% endif %}
+</tbody></table></div>
+
+<h2 style="margin-top:28px">Escalation (synthetic, binary) &amp; calibration</h2>
+<div class="table-wrap"><table><thead><tr><th>Model</th><th class="num">n (pos)</th><th class="num">ROC-AUC</th><th class="num">PR-AUC</th><th class="num">Precision</th><th class="num">Recall</th><th class="num">F1</th><th class="num">Brier</th><th class="num">ECE</th><th class="num">Brier (T-scaled)</th><th class="num">ECE (T-scaled)</th></tr></thead><tbody>
+{% for k in model_keys if model_metrics[k] %}{% set e = model_metrics[k].overall.escalation %}{% set c = model_metrics[k].overall.escalation_calibrated %}<tr><td>{{ model_display[k] }}</td><td class="num">{{ e.n }} ({{ e.n_positive }})</td><td class="num">{{ na(e.roc_auc) }}</td><td class="num">{{ na(e.pr_auc) }}</td><td class="num">{{ na(e.precision) }}</td><td class="num">{{ na(e.recall) }}</td><td class="num">{{ na(e.f1) }}</td><td class="num">{{ na(e.brier) }}</td><td class="num">{{ na(e.ece_10bin) }}</td><td class="num">{{ na(c.brier if c else none) }}</td><td class="num">{{ na(c.ece_10bin if c else none) }}</td></tr>{% endfor %}
+{% if comparison.majority_baseline %}{% set b = comparison.majority_baseline.escalation_constant_prior %}<tr class="muted"><td>Constant prior p={{ '%.2f'|format(b.prior_p) }}</td><td class="num">{{ b.n }} ({{ b.n_positive }})</td><td class="num">{{ na(b.roc_auc) }}</td><td class="num">{{ na(b.pr_auc) }}</td><td class="num">{{ na(b.precision) }}</td><td class="num">{{ na(b.recall) }}</td><td class="num">{{ na(b.f1) }}</td><td class="num">{{ na(b.brier) }}</td><td class="num">{{ na(b.ece_10bin) }}</td><td></td><td></td></tr>{% endif %}
+</tbody></table></div>
+<p class="small muted">Threshold for precision/recall/F1 = 0.5 (untuned). T-scaled = single-parameter temperature scaling fitted on the validation split (~{{ model_metrics[model_keys[0]].test_sizes.escalation if model_metrics[model_keys[0]] else '?' }} examples per split), so calibration estimates are indicative only. Escalation PR-AUC CI: {% for k in model_keys if model_metrics[k] %}{{ model_display[k] }} {% set ci = model_metrics[k].overall.escalation.pr_auc_ci95 %}{% if ci %}[{{ '%.3f'|format(ci[0]) }}, {{ '%.3f'|format(ci[1]) }}]{% else %}n/a{% endif %}{{ '; ' if not loop.last }}{% endfor %}.</p>
+
+<h2 style="margin-top:28px">By language / script</h2>
+<p class="small muted">Each language shows only the tasks that have labelled test data for it. “–” means <strong>not measured</strong> (no labels): e.g. there is no labelled Romanised-Hindi intent data, and urgency/escalation labels exist only for hi-Deva and hi-Latn.</p>
+<div class="table-wrap"><table><thead><tr><th rowspan="2">Language</th>{% for k in model_keys %}<th colspan="3" style="text-align:center">{{ model_display[k] }}</th>{% endfor %}</tr>
+<tr>{% for k in model_keys %}<th class="num">Intent F1</th><th class="num">Urgency F1</th><th class="num">Escal. F1</th>{% endfor %}</tr></thead><tbody>
+{% for lang, per in comparison.language_table.items() %}<tr><td>{{ lang }}</td>{% for k in model_keys if k in per %}{% set p = per[k] %}
+<td class="num">{% if p.intent_n %}{{ '%.3f'|format(p.intent_macro_f1) }} <span class="muted small">n={{ p.intent_n }}</span>{% else %}–{% endif %}</td>
+<td class="num">{% if p.urgency_n %}{{ '%.3f'|format(p.urgency_macro_f1) }} <span class="muted small">n={{ p.urgency_n }}</span>{% else %}–{% endif %}</td>
+<td class="num">{% if p.escalation_n %}{{ '%.3f'|format(p.escalation_f1) }} <span class="muted small">n={{ p.escalation_n }}</span>{% else %}–{% endif %}</td>{% endfor %}</tr>{% endfor %}
+</tbody></table></div>
+<div class="legend" style="margin-top:14px"><span><i></i>{{ model_display[model_keys[0]] }}</span><span><i class="b"></i>{{ model_display[model_keys[1]] }}</span></div>
+<div class="grid cols-2">{% for title, rows in charts.languages.items() if rows %}<section class="card"><h2>{{ title }}</h2>
+  {% for r in rows %}<p class="small" style="margin:8px 0 2px"><strong>{{ r.label }}</strong></p>{{ bars(r.bars) }}{% endfor %}</section>{% endfor %}</div>
+<p class="small muted">Per-language intent F1 is macro-averaged over the classes present in that language's test rows; n per language is small (~170), so differences of a few points are noise. Code-mixed (Devanagari+Latin) intent performance is not measured: no labelled code-mixed intent data exists in the selected subsets.</p>
+
+{% if model_metrics[model_keys[0]] %}<h2 style="margin-top:28px">Intent accuracy by message length</h2>
+<div class="table-wrap"><table><thead><tr><th>Bucket (MuRIL tokens)</th>{% for k in model_keys %}<th class="num">{{ model_display[k] }} acc</th>{% endfor %}<th class="num">n</th></tr></thead><tbody>
+{% for b, v in model_metrics[model_keys[0]].by_length_intent.items() %}<tr><td>{{ b }}</td>{% for k in model_keys if model_metrics[k] %}<td class="num">{{ na(model_metrics[k].by_length_intent[b].intent_accuracy) }}</td>{% endfor %}<td class="num">{{ v.n }}</td></tr>{% endfor %}</tbody></table></div>{% endif %}
+{% endif %}
+
+{% if audit %}<h2 style="margin-top:28px">Data audit highlights</h2>
+<div class="grid cols-2"><section class="card"><h2>Leakage checks</h2><dl class="kv">
+<dt>Exact text overlap (train/val/test)</dt><dd>{{ audit.leakage.exact_text_overlap.values()|sum }}</dd><dt>ID overlap</dt><dd>{{ audit.leakage.id_overlap.values()|sum }}</dd>
+<dt>Near-dups test→train, Banking77 (cos ≥ .85)</dt><dd>{{ audit.leakage.near_duplicates_test_vs_train.banking77.n_near_dup }} / {{ audit.leakage.near_duplicates_test_vs_train.banking77.n_test }}</dd>
+<dt>Near-dups test→train, synthetic</dt><dd>{{ audit.leakage.near_duplicates_test_vs_train.synthetic_enterprise.n_near_dup }} / {{ audit.leakage.near_duplicates_test_vs_train.synthetic_enterprise.n_test }}</dd></dl></section>
+<section class="card"><h2>Sanity baseline</h2><p class="small">A non-neural char-n-gram logistic regression predicts synthetic escalation with PR-AUC {{ '%.3f'|format(audit.sanity_baseline_escalation_char_tfidf_lr_5fold_cv.pr_auc) }} (5-fold CV, n={{ audit.sanity_baseline_escalation_char_tfidf_lr_5fold_cv.n }}). The synthetic escalation label is largely learnable from surface text, so high escalation scores here say little about real-world difficulty.</p></section></div>{% endif %}
+{% endblock %}

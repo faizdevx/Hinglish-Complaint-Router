@@ -1,0 +1,14 @@
+{% extends "base.html" %}{% from "_macros.html" import dot %}
+{% block content %}
+<h1>System health</h1>
+<p class="lede">Live state of this running process. <a href="/docs">API Docs (Swagger) →</a></p>
+<div class="grid cols-3">
+<section class="card"><h2>API</h2><p class="big">{{ dot('ok') }}{{ 'Healthy' if health.status == 'ok' else 'Degraded' }}</p><p class="small muted">Status reported by <code>GET /health</code>. “Degraded” = no model loaded.</p></section>
+<section class="card"><h2>Models</h2>{% for k in model_keys %}{% set m = models_status[k] %}<p>{{ dot(m.status) }}<strong>{{ model_display[k] }}:</strong> {{ 'Loaded' if m.status == 'ready' else 'Unavailable' }}</p>{% if m.status != 'ready' %}<p class="small muted">{{ m.message }}</p>{% endif %}{% endfor %}</section>
+<section class="card"><h2>Artifacts</h2>{% for k, label in [('dataset_metadata','Dataset metadata'),('evaluation_metrics','Evaluation metrics'),('error_analysis','Error analysis CSV'),('figures','Confusion-matrix figures')] %}<p>{{ dot('available' if health.artifacts[k] else 'unavailable') }}{{ label }}: {{ 'Available' if health.artifacts[k] else 'Not available' }}</p>{% endfor %}</section>
+<section class="card"><h2>Runtime</h2><dl class="kv"><dt>Inference device</dt><dd>{{ health.device }}</dd><dt>CUDA available</dt><dd>{{ system.cuda_available }}</dd><dt>MPS available</dt><dd>{{ system.mps_available }}</dd><dt>CPU threads</dt><dd>{{ system.cpu_threads }}</dd><dt>Platform</dt><dd>{{ system.platform }}</dd></dl></section>
+<section class="card"><h2>Versions</h2><dl class="kv"><dt>Python</dt><dd>{{ system.python }}</dd><dt>PyTorch</dt><dd>{{ system.torch }}</dd><dt>Transformers</dt><dd>{{ system.transformers }}</dd></dl></section>
+<section class="card"><h2>Memory</h2>{% if system.memory %}<dl class="kv"><dt>This process (RSS)</dt><dd>{{ system.memory.process_rss_mb }} MB</dd><dt>System available</dt><dd>{{ system.memory.system_available_mb }} MB</dd><dt>System total</dt><dd>{{ system.memory.system_total_mb }} MB</dd></dl>{% else %}<p class="muted">Not available (psutil not installed).</p>{% endif %}</section>
+<section class="card"><h2>Optional integrations</h2><p>{{ dot('available' if sarvam_configured else 'unavailable') }}Sarvam speech-to-text: {{ 'API key configured (adapter untested against the live API)' if sarvam_configured else 'Not configured (SARVAM_API_KEY not set)' }}</p><p class="small muted">Only whether a key exists is shown; the key is never exposed.</p></section>
+</div>
+{% endblock %}

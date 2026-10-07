@@ -1,0 +1,30 @@
+{
+  "dataset": "cmul8-hf/IndicJevBench",
+  "retrieved": "2026-10-07",
+  "files": {
+    "manifest.json": {
+      "sha256": "4ba1bc8866ae55a74f7993db18138d551f879b0e5005afc1dc4c68034f94e1a2",
+      "bytes": 1507
+    },
+    "README.md": {
+      "sha256": "b3ef5951ec86b94db6e0b66d28ca5250415eb2c36fc504332824394ec50bd49f",
+      "bytes": 5731
+    },
+    "v1/fintech_banking77.jsonl": {
+      "sha256": "5be7319a0fba54a129e3adadd291636185c3e88c3ec476bbacef30239410fa10",
+      "bytes": 6390274
+    },
+    "v1/synthetic_enterprise.jsonl": {
+      "sha256": "2a2a9d1700f9563159181c6e05ef2f5102494d9a9ddb04d86fc5305eeed53e9b",
+      "bytes": 279938
+    },
+    "v1/hinglish_lid.jsonl": {
+      "sha256": "b416452fb960cd41f61c55ca497f6719d7d5bf608ab44d2609758489393a1fad",
+      "bytes": 2962680
+    },
+    "v1/intent_massive.jsonl": {
+      "sha256": "b74845904dcfad696816af29a10c8906757d9b63059a31b0472edb0ee7390b04",
+      "bytes": 40018115
+    }
+  }
+}

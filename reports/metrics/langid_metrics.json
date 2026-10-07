@@ -1,0 +1,71 @@
+{
+  "note": "in-domain only: en-Latn=Banking77 English, hi-Latn=synthetic_enterprise. Optimistic.",
+  "train_counts": {
+    "en-Latn": 908,
+    "hi-Latn": 94
+  },
+  "val": {
+    "en-Latn": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1-score": 1.0,
+      "support": 211.0
+    },
+    "hi-Latn": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1-score": 1.0,
+      "support": 20.0
+    },
+    "accuracy": 1.0,
+    "macro avg": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1-score": 1.0,
+      "support": 231.0
+    },
+    "weighted avg": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1-score": 1.0,
+      "support": 231.0
+    }
+  },
+  "test": {
+    "en-Latn": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1-score": 1.0,
+      "support": 199.0
+    },
+    "hi-Latn": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1-score": 1.0,
+      "support": 21.0
+    },
+    "accuracy": 1.0,
+    "macro avg": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1-score": 1.0,
+      "support": 220.0
+    },
+    "weighted avg": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1-score": 1.0,
+      "support": 220.0
+    }
+  },
+  "script_rule_vs_hinglish_lid_gold": {
+    "n": 3220,
+    "agree": 3219,
+    "accuracy": 0.9996894409937889,
+    "caveat": "gold label is itself derived from Unicode script presence, so this checks implementation consistency, not real-world LID quality"
+  },
+  "hinglish_lid_latin_only_predicted_distribution_unlabeled": {
+    "en-Latn": 201,
+    "hi-Latn": 698
+  }
+}

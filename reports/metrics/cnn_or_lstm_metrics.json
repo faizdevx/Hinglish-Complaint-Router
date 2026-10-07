@@ -1,0 +1,536 @@
+{
+  "overall": {
+    "intent": {
+      "n": 1173,
+      "accuracy": 0.5285592497868713,
+      "macro_precision": 0.5537681012720922,
+      "macro_recall": 0.5249044575576874,
+      "macro_f1": 0.5162306626830755,
+      "weighted_f1": 0.5229454908597833,
+      "macro_f1_ci95": [
+        0.4795991747268887,
+        0.5359440762489183
+      ]
+    },
+    "urgency": {
+      "n": 27,
+      "accuracy": 0.4444444444444444,
+      "macro_f1": 0.3276190476190476,
+      "mae_levels": 0.6296296296296297,
+      "within_one_accuracy": 0.9259259259259259,
+      "confusion_matrix": [
+        [
+          0,
+          1,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          1,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          2,
+          1,
+          2,
+          1
+        ],
+        [
+          0,
+          0,
+          1,
+          4,
+          3
+        ],
+        [
+          0,
+          0,
+          1,
+          4,
+          6
+        ]
+      ],
+      "macro_f1_ci95": [
+        0.15272027972027974,
+        0.5739292524790236
+      ]
+    },
+    "escalation": {
+      "n": 26,
+      "n_positive": 17,
+      "threshold": 0.5,
+      "roc_auc": 0.9215686274509804,
+      "pr_auc": 0.9528787965206651,
+      "precision": 0.8421052631578947,
+      "recall": 0.9411764705882353,
+      "f1": 0.8888888888888888,
+      "brier": 0.1253684466609599,
+      "ece_10bin": 0.14452223570803635,
+      "positive_rate": 0.6538461538461539,
+      "pr_auc_ci95": [
+        0.852040283916597,
+        1.0
+      ]
+    },
+    "escalation_calibrated": {
+      "n": 26,
+      "n_positive": 17,
+      "threshold": 0.5,
+      "roc_auc": 0.9215686274509804,
+      "pr_auc": 0.9528787965206651,
+      "precision": 0.8421052631578947,
+      "recall": 0.9411764705882353,
+      "f1": 0.8888888888888888,
+      "brier": 0.10221453166901719,
+      "ece_10bin": 0.12579401496985976,
+      "positive_rate": 0.6538461538461539
+    }
+  },
+  "temperature": 3.7831762498814525,
+  "by_language": {
+    "bn-Beng": {
+      "intent": {
+        "n": 167,
+        "accuracy": 0.562874251497006,
+        "macro_precision": 0.5144533869885983,
+        "macro_recall": 0.5448356807511736,
+        "macro_f1": 0.4780196329492105,
+        "weighted_f1": 0.5507906265391294
+      },
+      "urgency": null,
+      "escalation": null,
+      "escalation_calibrated": null
+    },
+    "en-Latn": {
+      "intent": {
+        "n": 199,
+        "accuracy": 0.542713567839196,
+        "macro_precision": 0.46019047619047626,
+        "macro_recall": 0.49288888888888893,
+        "macro_f1": 0.4488640248640249,
+        "weighted_f1": 0.5293797213395203
+      },
+      "urgency": null,
+      "escalation": null,
+      "escalation_calibrated": null
+    },
+    "hi-Deva": {
+      "intent": {
+        "n": 163,
+        "accuracy": 0.5214723926380368,
+        "macro_precision": 0.4533869885982562,
+        "macro_recall": 0.48122065727699537,
+        "macro_f1": 0.4296526634554803,
+        "weighted_f1": 0.49709009463610687
+      },
+      "urgency": {
+        "n": 13,
+        "accuracy": 0.6923076923076923,
+        "macro_f1": 0.7250000000000001,
+        "mae_levels": 0.3076923076923077,
+        "within_one_accuracy": 1.0,
+        "confusion_matrix": [
+          [
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            1,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            1,
+            2,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            3,
+            1
+          ],
+          [
+            0,
+            0,
+            0,
+            1,
+            4
+          ]
+        ]
+      },
+      "escalation": {
+        "n": 13,
+        "n_positive": 9,
+        "threshold": 0.5,
+        "roc_auc": 1.0,
+        "pr_auc": 1.0000000000000002,
+        "precision": 0.9,
+        "recall": 1.0,
+        "f1": 0.9473684210526315,
+        "brier": 0.06695049647173586,
+        "ece_10bin": 0.08762572534272647,
+        "positive_rate": 0.6923076923076923
+      },
+      "escalation_calibrated": {
+        "n": 13,
+        "n_positive": 9,
+        "threshold": 0.5,
+        "roc_auc": 1.0,
+        "pr_auc": 1.0000000000000002,
+        "precision": 0.9,
+        "recall": 1.0,
+        "f1": 0.9473684210526315,
+        "brier": 0.0606599627726174,
+        "ece_10bin": 0.0965872499010586,
+        "positive_rate": 0.6923076923076923
+      }
+    },
+    "hi-Latn": {
+      "intent": null,
+      "urgency": {
+        "n": 14,
+        "accuracy": 0.21428571428571427,
+        "macro_f1": 0.12272727272727273,
+        "mae_levels": 0.9285714285714286,
+        "within_one_accuracy": 0.8571428571428571,
+        "confusion_matrix": [
+          [
+            0,
+            1,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            2,
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1,
+            1,
+            2
+          ],
+          [
+            0,
+            0,
+            1,
+            3,
+            2
+          ]
+        ]
+      },
+      "escalation": {
+        "n": 13,
+        "n_positive": 8,
+        "threshold": 0.5,
+        "roc_auc": 0.85,
+        "pr_auc": 0.8956845238095238,
+        "precision": 0.7777777777777778,
+        "recall": 0.875,
+        "f1": 0.8235294117647058,
+        "brier": 0.18378639685018394,
+        "ece_10bin": 0.20214611158109874,
+        "positive_rate": 0.6153846153846154
+      },
+      "escalation_calibrated": {
+        "n": 13,
+        "n_positive": 8,
+        "threshold": 0.5,
+        "roc_auc": 0.85,
+        "pr_auc": 0.8956845238095238,
+        "precision": 0.7777777777777778,
+        "recall": 0.875,
+        "f1": 0.8235294117647058,
+        "brier": 0.14376910056541692,
+        "ece_10bin": 0.1695547043887795,
+        "positive_rate": 0.6153846153846154
+      }
+    },
+    "kn-Knda": {
+      "intent": {
+        "n": 164,
+        "accuracy": 0.5487804878048781,
+        "macro_precision": 0.48156370656370656,
+        "macro_recall": 0.4927927927927928,
+        "macro_f1": 0.457046332046332,
+        "weighted_f1": 0.5288085559427023
+      },
+      "urgency": null,
+      "escalation": null,
+      "escalation_calibrated": null
+    },
+    "ml-Mlym": {
+      "intent": {
+        "n": 140,
+        "accuracy": 0.44285714285714284,
+        "macro_precision": 0.3932432432432433,
+        "macro_recall": 0.39977477477477474,
+        "macro_f1": 0.3622157872157872,
+        "weighted_f1": 0.4318310657596372
+      },
+      "urgency": null,
+      "escalation": null,
+      "escalation_calibrated": null
+    },
+    "ta-Taml": {
+      "intent": {
+        "n": 165,
+        "accuracy": 0.47878787878787876,
+        "macro_precision": 0.49455782312925173,
+        "macro_recall": 0.4526870748299319,
+        "macro_f1": 0.4409348587920016,
+        "weighted_f1": 0.4872547990729809
+      },
+      "urgency": null,
+      "escalation": null,
+      "escalation_calibrated": null
+    },
+    "te-Telu": {
+      "intent": {
+        "n": 175,
+        "accuracy": 0.5828571428571429,
+        "macro_precision": 0.5605074893807288,
+        "macro_recall": 0.5545774647887324,
+        "macro_f1": 0.5068780202583019,
+        "weighted_f1": 0.5803743240886098
+      },
+      "urgency": null,
+      "escalation": null,
+      "escalation_calibrated": null
+    }
+  },
+  "by_length_intent": {
+    "<=8 tokens": {
+      "n": 53,
+      "intent_accuracy": 0.4716981132075472
+    },
+    "9-16 tokens": {
+      "n": 735,
+      "intent_accuracy": 0.563265306122449
+    },
+    ">16 tokens": {
+      "n": 385,
+      "intent_accuracy": 0.4701298701298701
+    }
+  },
+  "latency_cpu": {
+    "device": "cpu",
+    "threads": 4,
+    "batch_size": 1,
+    "runs": 60,
+    "median_ms": 4.802586499863537,
+    "p95_ms": 7.297003000530822,
+    "scope": "end-to-end predict(): normalise+tokenise+forward+softmax+language-id+routing"
+  },
+  "parameters": 1608787,
+  "model": {
+    "model_id": "BiLSTM (from scratch)",
+    "tokenizer_id": "google/muril-base-cased",
+    "max_length": 64,
+    "batch_size": 32,
+    "learning_rate": 0.002,
+    "optimizer": "Adam(lr=0.002)",
+    "epochs_run": 18,
+    "best_epoch": 13,
+    "seed": 42,
+    "device": "cpu",
+    "python": "3.13.16",
+    "torch": "2.14.1+cpu",
+    "transformers": "5.19.0",
+    "trained_at": "2026-10-07T06:25:56+00:00",
+    "synthetic_repeat": 4,
+    "lambdas": {
+      "intent": 1.0,
+      "urgency": 1.0,
+      "escalation": 1.0
+    }
+  },
+  "test_sizes": {
+    "rows": 1207,
+    "intent": 1173,
+    "urgency": 27,
+    "escalation": 26
+  },
+  "intent_labels": [
+    "Refund_not_showing_up",
+    "activate_my_card",
+    "age_limit",
+    "apple_pay_or_google_pay",
+    "atm_support",
+    "automatic_top_up",
+    "balance_not_updated_after_bank_transfer",
+    "balance_not_updated_after_cheque_or_cash_deposit",
+    "beneficiary_not_allowed",
+    "cancel_transfer",
+    "card_about_to_expire",
+    "card_acceptance",
+    "card_arrival",
+    "card_delivery_estimate",
+    "card_linking",
+    "card_not_working",
+    "card_payment_fee_charged",
+    "card_payment_not_recognised",
+    "card_payment_wrong_exchange_rate",
+    "card_swallowed",
+    "cash_withdrawal_charge",
+    "cash_withdrawal_not_recognised",
+    "change_pin",
+    "compromised_card",
+    "contactless_not_working",
+    "country_support",
+    "declined_card_payment",
+    "declined_cash_withdrawal",
+    "declined_transfer",
+    "direct_debit_payment_not_recognised",
+    "disposable_card_limits",
+    "edit_personal_details",
+    "exchange_charge",
+    "exchange_rate",
+    "exchange_via_app",
+    "extra_charge_on_statement",
+    "failed_transfer",
+    "fiat_currency_support",
+    "get_disposable_virtual_card",
+    "get_physical_card",
+    "getting_spare_card",
+    "getting_virtual_card",
+    "lost_or_stolen_card",
+    "lost_or_stolen_phone",
+    "order_physical_card",
+    "passcode_forgotten",
+    "pending_card_payment",
+    "pending_cash_withdrawal",
+    "pending_top_up",
+    "pending_transfer",
+    "pin_blocked",
+    "receiving_money",
+    "request_refund",
+    "reverted_card_payment?",
+    "supported_cards_and_currencies",
+    "terminate_account",
+    "top_up_by_bank_transfer_charge",
+    "top_up_by_card_charge",
+    "top_up_by_cash_or_cheque",
+    "top_up_failed",
+    "top_up_limits",
+    "top_up_reverted",
+    "topping_up_by_card",
+    "transaction_charged_twice",
+    "transfer_fee_charged",
+    "transfer_into_account",
+    "transfer_not_received_by_recipient",
+    "transfer_timing",
+    "unable_to_verify_identity",
+    "verify_my_identity",
+    "verify_source_of_funds",
+    "verify_top_up",
+    "virtual_card_not_working",
+    "visa_or_mastercard",
+    "why_verify_identity",
+    "wrong_amount_of_cash_received",
+    "wrong_exchange_rate_for_cash_withdrawal"
+  ],
+  "intent_confusion_top_pairs": [
+    {
+      "true": "pending_transfer",
+      "pred": "failed_transfer",
+      "count": 6
+    },
+    {
+      "true": "wrong_exchange_rate_for_cash_withdrawal",
+      "pred": "card_payment_wrong_exchange_rate",
+      "count": 6
+    },
+    {
+      "true": "automatic_top_up",
+      "pred": "verify_top_up",
+      "count": 5
+    },
+    {
+      "true": "get_disposable_virtual_card",
+      "pred": "disposable_card_limits",
+      "count": 5
+    },
+    {
+      "true": "pending_card_payment",
+      "pred": "declined_card_payment",
+      "count": 5
+    },
+    {
+      "true": "top_up_reverted",
+      "pred": "top_up_failed",
+      "count": 5
+    },
+    {
+      "true": "Refund_not_showing_up",
+      "pred": "request_refund",
+      "count": 4
+    },
+    {
+      "true": "balance_not_updated_after_bank_transfer",
+      "pred": "failed_transfer",
+      "count": 4
+    },
+    {
+      "true": "card_arrival",
+      "pred": "lost_or_stolen_card",
+      "count": 4
+    },
+    {
+      "true": "card_payment_not_recognised",
+      "pred": "transaction_charged_twice",
+      "count": 4
+    },
+    {
+      "true": "direct_debit_payment_not_recognised",
+      "pred": "transaction_charged_twice",
+      "count": 4
+    },
+    {
+      "true": "exchange_charge",
+      "pred": "card_payment_wrong_exchange_rate",
+      "count": 4
+    },
+    {
+      "true": "order_physical_card",
+      "pred": "getting_spare_card",
+      "count": 4
+    },
+    {
+      "true": "pin_blocked",
+      "pred": "change_pin",
+      "count": 4
+    },
+    {
+      "true": "top_up_limits",
+      "pred": "verify_top_up",
+      "count": 4
+    }
+  ]
+}

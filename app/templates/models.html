@@ -1,0 +1,24 @@
+{% extends "base.html" %}{% from "_macros.html" import dot, na, hint_eval, bars %}
+{% block content %}
+<h1>Models</h1>
+<p class="lede">Both models share the same tokenizer vocabulary source and the same three task heads (intent, urgency, escalation). Values below are read from <code>reports/metrics/comparison.json</code>.</p>
+<div class="grid cols-2">
+{% for k in model_keys %}{% set m = models_status[k] %}
+<section class="card"><h2>{{ model_display[k] }}</h2>
+  {% if m.status == 'ready' %}<p>{{ dot('ready') }}Ready</p>
+  <dl class="kv"><dt>Architecture</dt><dd>{{ m.architecture }}</dd><dt>Parameters</dt><dd>{{ '{:,}'.format(m.parameters) if m.parameters else 'Not available' }}</dd>
+  <dt>Checkpoint</dt><dd class="mono">{{ m.checkpoint }}</dd><dt>Device</dt><dd>{{ m.device }}</dd><dt>Max sequence length</dt><dd>{{ m.max_length or 'Not available' }}</dd>
+  <dt>Trained at</dt><dd>{{ m.trained_at or 'Not available' }}</dd><dt>Best epoch / run</dt><dd>{{ m.best_epoch }} / {{ m.epochs_run }}</dd><dt>Optimizer</dt><dd>{{ m.optimizer }}</dd><dt>Seed</dt><dd>{{ m.seed }}</dd>
+  <dt>Escalation temperature</dt><dd>{{ '%.3f'|format(m.temperature) if m.temperature else 'not fitted' }}</dd></dl>
+  {% else %}<p>{{ dot('unavailable') }}Model unavailable</p><p class="small muted">{{ m.message }}</p>{% endif %}</section>{% endfor %}
+</div>
+<h2 style="margin-top:28px">Comparison (held-out test split)</h2>
+{% if rows %}
+<div class="table-wrap"><table><thead><tr><th>Metric</th>{% for k in model_keys %}<th class="num">{{ model_display[k] }}</th>{% endfor %}</tr></thead><tbody>
+{% for r in rows %}<tr><td>{{ r.label }}</td>{% for k in model_keys %}{% set c = r.cells[k] %}{% set vals = r.cells.values()|map(attribute='value')|reject('none')|list %}
+<td class="num {{ 'best' if c.value is not none and vals|length > 1 and ((r.higher_better and c.value == vals|max) or (not r.higher_better and c.value == vals|min)) else '' }}">{{ c.text }}</td>{% endfor %}</tr>{% endfor %}
+</tbody></table></div>
+<p class="small muted">Green = better of the two. Escalation and urgency test sets are tiny (see <a href="/evaluation">Evaluation</a>); differences there are within noise unless the bootstrap intervals separate.</p>
+{% if charts %}<div class="grid cols-2" style="margin-top:16px">{% for title, items in charts.overall.items() %}<section class="card"><h2>{{ title }}</h2>{{ bars(items) }}</section>{% endfor %}</div>{% endif %}
+{% else %}<div class="notice">Not available. {{ hint_eval() }}</div>{% endif %}
+{% endblock %}
