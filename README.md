@@ -93,6 +93,17 @@ Real failed test rows: `reports/error_analysis.csv` (BiLSTM 571, MuRIL 805 rows 
 
 Patterns (counted, not interpreted by a model): the top confusions are between *semantically adjacent* banking intents, e.g. `wrong_exchange_rate_for_cash_withdrawal → card_payment_wrong_exchange_rate` (BiLSTM 6, MuRIL 16), `pending_transfer → failed_transfer` (BiLSTM 6), `extra_charge_on_statement → card_payment_fee_charged` (MuRIL 17), `verify_my_identity → why_verify_identity` (MuRIL 14). Several MuRIL errors collapse different cash-withdrawal intents into `balance_not_updated_after_cheque_or_cash_deposit` (14 each), which is consistent with under-training. Urgency errors (BiLSTM 15, MuRIL 14 texts) are mostly off by one level (BiLSTM within-±1 accuracy 0.93). Escalation: BiLSTM 1 missed / 3 false, MuRIL 1 missed / 4 false escalations out of 26.
 
+## Pretrained checkpoints (Hugging Face)
+
+The trained weights are published (currently **private**) at [`Faizdevx/hinglish-complaint-router`](https://huggingface.co/Faizdevx/hinglish-complaint-router): `lstm/`, `transformer/` (MuRIL `best.pt` only) and `langid.joblib`. They are git-ignored here because MuRIL alone is ~950 MB. To use them instead of retraining:
+
+```python
+from huggingface_hub import snapshot_download   # needs HF access to the repo (token while it is private)
+snapshot_download("Faizdevx/hinglish-complaint-router", local_dir="models",
+                  allow_patterns=["lstm/*", "transformer/*", "langid.joblib"])
+```
+then start the app as below. The `models/` layout must be `models/lstm/`, `models/transformer/`, `models/langid.joblib`. I have not run this download path end to end; the upload itself was verified by listing the repo files. Note MuRIL there is the under-trained 4-epoch run (see Results).
+
 ## Web dashboard
 
 ```bash
