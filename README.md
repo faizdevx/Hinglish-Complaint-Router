@@ -166,6 +166,7 @@ Destination queue
 
 ---
 
+
 ## Why Hinglish?
 
 Romanised Hindi is Hindi written in Latin characters, often mixed with English words:
@@ -278,6 +279,12 @@ Training:
 - 10% warm-up
 - 4 epochs
 - CPU
+
+
+[Hinglish Complaint Router](https://huggingface.co/Faizdevx/hinglish-complaint-router)
+
+![Architecture diagram of the Hinglish Complaint Router model showing text classification flow](1.png)
+
 
 ### Multi-task loss
 
